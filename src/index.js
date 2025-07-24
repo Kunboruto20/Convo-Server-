@@ -6,6 +6,9 @@ const Session = require('./session');
 const Messages = require('./messages');
 const Contacts = require('./contacts');
 const Groups = require('./groups');
+const Status = require('./status');
+const Profile = require('./profile');
+const Broadcast = require('./broadcast');
 
 class WhatsAppWeb {
     constructor() {
@@ -15,6 +18,9 @@ class WhatsAppWeb {
         this.messages = new Messages(this.ws);
         this.contacts = new Contacts(this.ws);
         this.groups = new Groups(this.ws);
+        this.status = new Status(this.ws);
+        this.profile = new Profile(this.ws);
+        this.broadcast = new Broadcast(this.ws);
     }
 
     async connect() {
@@ -77,6 +83,44 @@ class WhatsAppWeb {
     }
     onGroupEvent(callback) {
         this.groups.onGroupEvent(callback);
+    }
+
+    // Statusuri
+    uploadStatus(mediaUrl, caption) {
+        this.status.uploadStatus(mediaUrl, caption);
+    }
+    getStatuses() {
+        return this.status.getStatuses();
+    }
+    onStatusUpdate(callback) {
+        this.status.onStatusUpdate(callback);
+    }
+    // Profile pic
+    setProfilePic(imageUrl) {
+        this.profile.setProfilePic(imageUrl);
+    }
+    getProfilePic(jid) {
+        return this.profile.getProfilePic(jid);
+    }
+    onProfilePicUpdate(callback) {
+        this.profile.onProfilePicUpdate(callback);
+    }
+    // Contacte
+    getContact(jid) {
+        return this.contacts.getContact(jid);
+    }
+    updateContact(jid, info) {
+        this.contacts.updateContact(jid, info);
+    }
+    onContactUpdate(callback) {
+        this.contacts.onContactUpdate(callback);
+    }
+    // Broadcast
+    sendBroadcast(jids, text) {
+        this.broadcast.sendBroadcast(jids, text);
+    }
+    onBroadcastEvent(callback) {
+        this.broadcast.onBroadcastEvent(callback);
     }
 }
 

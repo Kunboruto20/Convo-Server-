@@ -36,4 +36,28 @@ const client = new WhatsAppWeb();
     const imgUrl = await client.uploadMedia(imgBuffer, 'image/jpeg');
     client.sendImageMessage('123456789@s.whatsapp.net', imgUrl, 'image/jpeg', 'Poza uploadată!');
     */
+
+    // Exemplu statusuri
+    client.uploadStatus('https://exemplu.com/story.jpg', 'Story nou!');
+    client.getStatuses();
+    client.onStatusUpdate((status) => {
+        console.log('Status nou:', status);
+    });
+    // Exemplu profile pic
+    client.setProfilePic('https://exemplu.com/avatar.jpg');
+    client.getProfilePic('123456789@s.whatsapp.net');
+    client.onProfilePicUpdate((pic) => {
+        console.log('Profile pic schimbat:', pic);
+    });
+    // Exemplu contacte
+    client.getContact('123456789@s.whatsapp.net');
+    client.updateContact('123456789@s.whatsapp.net', { name: 'Nume Nou' });
+    client.onContactUpdate((contact) => {
+        console.log('Contact update:', contact);
+    });
+    // Exemplu broadcast
+    client.sendBroadcast(['123456789@s.whatsapp.net', '987654321@s.whatsapp.net'], 'Salut broadcast!');
+    client.onBroadcastEvent((event) => {
+        console.log('Eveniment broadcast:', event);
+    });
 })();
