@@ -15,4 +15,12 @@ const client = new WhatsAppWeb();
     client.sendDocumentMessage('123456789@s.whatsapp.net', 'https://exemplu.com/doc.pdf', 'application/pdf', 'Document.pdf');
     // Exemplu de trimitere reacție
     client.sendReaction('123456789@s.whatsapp.net', '👍', 'msg-key-123');
+
+    // Exemplu upload imagine și trimitere ca mesaj media
+    /*
+    const fs = require('fs');
+    const imgBuffer = fs.readFileSync('cale/catre/poza.jpg');
+    const imgUrl = await client.uploadMedia(imgBuffer, 'image/jpeg');
+    client.sendImageMessage('123456789@s.whatsapp.net', imgUrl, 'image/jpeg', 'Poza uploadată!');
+    */
 })();

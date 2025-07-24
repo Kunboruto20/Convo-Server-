@@ -58,6 +58,10 @@ class WhatsAppWeb {
     sendReaction(jid, text, key) {
         this.messages.sendReaction(jid, text, key);
     }
+
+    async uploadMedia(fileBuffer, mimetype) {
+        return await this.messages.uploadMedia(fileBuffer, mimetype);
+    }
 }
 
 module.exports = WhatsAppWeb;
