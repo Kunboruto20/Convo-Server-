@@ -21,7 +21,13 @@ class NoiseHandshake {
         return Buffer.from(this.ephemeral.publicKey);
     }
 
-    // Procesează răspunsul serverului
+    buildSecondMessage() {
+        // În Noise_XX, al doilea mesaj conține publicKey static + MAC, criptat cu shared secret
+        // Pentru simplitate, aici doar returnăm publicKey static (de test)
+        // În implementarea reală, trebuie criptat conform Noise_XX
+        return Buffer.from(this.localKeyPair.publicKey);
+    }
+
     processServerMessage(msg) {
         // 1. Extrage publicKey-ul serverului (primele 32 bytes)
         const serverPubKey = msg.slice(0, 32);
@@ -35,7 +41,23 @@ class NoiseHandshake {
         const sessionKey = hkdfSha256(Buffer.from(sharedSecret), Buffer.alloc(32), 'Noise_XX_25519_AESGCM_SHA256', 32);
         this.sessionKey = sessionKey;
         console.log('Session key (base64):', sessionKey.toString('base64'));
-        // TODO: Continuă handshake-ul Noise (al doilea mesaj, criptat)
+        // 4. Trimite al doilea mesaj Noise (criptat)
+        if (this.ws) {
+            const secondMsg = this.buildSecondMessage();
+            this.ws.send(secondMsg);
+        }
+        // TODO: După răspuns, finalizează handshake și derivă cheile de sesiune reale
+    }
+
+    finalizeHandshake() {
+        // În implementarea reală, aici derivăm cheile de criptare pentru sesiune (rx, tx)
+        // și salvăm tot ce trebuie pentru reconectare fără QR
+        // Exemplu:
+        return {
+            sessionKey: this.sessionKey.toString('base64'),
+            remotePubKey: this.remotePubKey.toString('base64'),
+            localPubKey: this.localKeyPair.publicKey.toString('base64')
+        };
     }
 }
 

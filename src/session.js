@@ -1,15 +1,21 @@
+const fs = require('fs');
+const path = require('path');
+
 class Session {
     constructor() {
         this.data = null;
+        this.file = path.join(__dirname, '../session.json');
     }
 
     save(sessionData) {
-        // TODO: Salvează sesiunea pe disc sau în memorie
         this.data = sessionData;
+        fs.writeFileSync(this.file, JSON.stringify(sessionData, null, 2));
     }
 
     load() {
-        // TODO: Încarcă sesiunea de pe disc sau din memorie
+        if (fs.existsSync(this.file)) {
+            this.data = JSON.parse(fs.readFileSync(this.file));
+        }
         return this.data;
     }
 }

@@ -38,6 +38,7 @@ class Auth {
             console.log('WebSocket connected. Inițiez handshake Noise...');
             // Inițializez Noise handshake
             this.noise = new NoiseHandshake(this.keyPair);
+            this.noise.ws = ws; // transmit ws către noise pentru handshake complet
             this.noise.init();
             const handshakeMsg = this.noise.buildInitialMessage();
             ws.send(handshakeMsg);
@@ -45,6 +46,10 @@ class Auth {
         ws.on('message', (data) => {
             // Procesez răspunsul de la server cu Noise handshake
             this.noise.processServerMessage(data);
+            // După handshake, salvez sesiunea
+            const sessionData = this.noise.finalizeHandshake();
+            this.session.save(sessionData);
+            console.log('Sesiune salvată:', sessionData);
         });
         ws.on('close', () => {
             console.log('WebSocket closed.');
