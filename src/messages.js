@@ -1,17 +1,23 @@
 const waProto = require('./wa-proto');
+const { aesGcmEncrypt } = require('./utils');
+const crypto = require('crypto');
 
 class Messages {
-    constructor(ws) {
+    constructor(ws, sessionKey) {
         this.ws = ws;
+        this.sessionKey = sessionKey; // Buffer
     }
 
     sendTextMessage(jid, text) {
         const Message = waProto.lookupType('Message');
         const payload = Message.create({ conversation: text });
         const buffer = Message.encode(payload).finish();
-        // TODO: Criptează buffer cu cheile de sesiune și trimite pe ws
+        // Criptează buffer cu cheile de sesiune (AES-GCM)
+        const nonce = crypto.randomBytes(12); // 12 bytes pentru GCM
+        const { encrypted, tag } = aesGcmEncrypt(this.sessionKey, buffer, nonce);
+        const finalPayload = Buffer.concat([nonce, tag, encrypted]);
+        if (this.ws) this.ws.send(finalPayload);
         console.log(`Trimite mesaj text către ${jid}:`, text);
-        // this.ws.send(buffer); // de trimis real după handshake
     }
 
     sendImageMessage(jid, url, mimetype, caption) {

@@ -20,7 +20,11 @@ class WhatsAppWeb {
     async connect() {
         // Începe pairing-ul cu QR code
         await this.auth.startPairing();
-        // TODO: După pairing, inițializează WebSocket și sesiunea
+        // După pairing, inițializează WebSocket și sesiunea
+        // Transmit ws și cheile de sesiune către Messages
+        if (this.auth.ws && this.auth.noise && this.auth.noise.sessionKey) {
+            this.messages = new Messages(this.auth.ws, this.auth.noise.sessionKey);
+        }
     }
 
     sendMessage(jid, content) {
