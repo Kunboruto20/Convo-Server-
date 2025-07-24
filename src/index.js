@@ -38,6 +38,22 @@ class WhatsAppWeb {
     getGroups() {
         return this.groups.getGroups();
     }
+
+    sendTextMessage(jid, text) {
+        this.messages.sendTextMessage(jid, text);
+    }
+    sendImageMessage(jid, url, mimetype, caption) {
+        this.messages.sendImageMessage(jid, url, mimetype, caption);
+    }
+    sendVideoMessage(jid, url, mimetype, caption) {
+        this.messages.sendVideoMessage(jid, url, mimetype, caption);
+    }
+    sendDocumentMessage(jid, url, mimetype, fileName) {
+        this.messages.sendDocumentMessage(jid, url, mimetype, fileName);
+    }
+    sendReaction(jid, text, key) {
+        this.messages.sendReaction(jid, text, key);
+    }
 }
 
 module.exports = WhatsAppWeb;
