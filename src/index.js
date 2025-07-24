@@ -1,24 +1,42 @@
 // WhatsApp Web JS Library - Entry Point
 
 const WebSocket = require('ws');
-const qrcode = require('qrcode-terminal');
-
-// TODO: Implement WhatsApp Web connection logic
+const Auth = require('./auth');
+const Session = require('./session');
+const Messages = require('./messages');
+const Contacts = require('./contacts');
+const Groups = require('./groups');
 
 class WhatsAppWeb {
     constructor() {
         this.ws = null;
+        this.auth = new Auth();
+        this.session = new Session();
+        this.messages = new Messages(this.ws);
+        this.contacts = new Contacts(this.ws);
+        this.groups = new Groups(this.ws);
     }
 
-    connect() {
-        // Placeholder: connect to WhatsApp WebSocket server
-        // In real implementation, must handle QR, pairing, etc.
-        console.log('Connecting to WhatsApp Web...');
-        // ...
+    async connect() {
+        // Începe pairing-ul cu QR code
+        await this.auth.startPairing();
+        // TODO: După pairing, inițializează WebSocket și sesiunea
     }
 
-    onQR(qr) {
-        qrcode.generate(qr, { small: true });
+    sendMessage(jid, content) {
+        this.messages.sendMessage(jid, content);
+    }
+
+    onMessage(callback) {
+        this.messages.onMessage(callback);
+    }
+
+    getContacts() {
+        return this.contacts.getContacts();
+    }
+
+    getGroups() {
+        return this.groups.getGroups();
     }
 }
 
