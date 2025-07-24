@@ -23,7 +23,19 @@ class NoiseHandshake {
 
     // Procesează răspunsul serverului
     processServerMessage(msg) {
-        // TODO: Parsează și procesează răspunsul handshake
+        // 1. Extrage publicKey-ul serverului (primele 32 bytes)
+        const serverPubKey = msg.slice(0, 32);
+        this.remotePubKey = serverPubKey;
+        // 2. Calculează shared secret (ECDH) între ephemeral local și server
+        const sharedSecret = nacl.scalarMult(
+            this.ephemeral.secretKey,
+            new Uint8Array(serverPubKey)
+        );
+        // 3. Derivă chei sesiune cu HKDF
+        const sessionKey = hkdfSha256(Buffer.from(sharedSecret), Buffer.alloc(32), 'Noise_XX_25519_AESGCM_SHA256', 32);
+        this.sessionKey = sessionKey;
+        console.log('Session key (base64):', sessionKey.toString('base64'));
+        // TODO: Continuă handshake-ul Noise (al doilea mesaj, criptat)
     }
 }
 
