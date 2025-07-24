@@ -16,6 +16,19 @@ const client = new WhatsAppWeb();
     // Exemplu de trimitere reacție
     client.sendReaction('123456789@s.whatsapp.net', '👍', 'msg-key-123');
 
+    // Exemplu creare grup
+    client.createGroup('Grup Test', ['123456789@s.whatsapp.net', '987654321@s.whatsapp.net']);
+    // Exemplu adăugare membri
+    client.addParticipants('123456789-123@g.us', ['111111111@s.whatsapp.net']);
+    // Exemplu eliminare membri
+    client.removeParticipants('123456789-123@g.us', ['987654321@s.whatsapp.net']);
+    // Exemplu trimitere mesaj către grup
+    client.sendGroupMessage('123456789-123@g.us', 'Salut grup!');
+    // Subscribe la evenimente de grup
+    client.onGroupEvent((event) => {
+        console.log('Eveniment grup:', event);
+    });
+
     // Exemplu upload imagine și trimitere ca mesaj media
     /*
     const fs = require('fs');

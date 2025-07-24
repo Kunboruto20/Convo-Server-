@@ -62,6 +62,22 @@ class WhatsAppWeb {
     async uploadMedia(fileBuffer, mimetype) {
         return await this.messages.uploadMedia(fileBuffer, mimetype);
     }
+
+    createGroup(subject, participants) {
+        this.groups.createGroup(subject, participants);
+    }
+    addParticipants(groupJid, participants) {
+        this.groups.addParticipants(groupJid, participants);
+    }
+    removeParticipants(groupJid, participants) {
+        this.groups.removeParticipants(groupJid, participants);
+    }
+    sendGroupMessage(groupJid, text) {
+        this.groups.sendGroupMessage(groupJid, text);
+    }
+    onGroupEvent(callback) {
+        this.groups.onGroupEvent(callback);
+    }
 }
 
 module.exports = WhatsAppWeb;
