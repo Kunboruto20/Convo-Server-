@@ -1,4 +1,5 @@
 const nacl = require('tweetnacl');
+const hkdf = require('futoin-hkdf');
 
 function generateKeyPair() {
     // Generează o pereche de chei Curve25519
@@ -9,6 +10,12 @@ function generateKeyPair() {
     };
 }
 
+function hkdfSha256(key, salt, info, length) {
+    // Derivează chei cu HKDF-SHA256
+    return hkdf(key, length, { salt, info, hash: 'SHA-256' });
+}
+
 module.exports = {
-    generateKeyPair
+    generateKeyPair,
+    hkdfSha256
 };
