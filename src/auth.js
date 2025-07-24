@@ -2,6 +2,7 @@ const qrcode = require('qrcode-terminal');
 const { generateKeyPair } = require('./utils');
 const crypto = require('crypto');
 const WebSocket = require('ws');
+const NoiseHandshake = require('./noise');
 
 function randomId(len = 16) {
     return crypto.randomBytes(len).toString('base64');
@@ -35,10 +36,15 @@ class Auth {
         const ws = new WebSocket('wss://web.whatsapp.com/ws');
         ws.on('open', () => {
             console.log('WebSocket connected. Inițiez handshake Noise...');
-            // TODO: Trimit handshake Noise conform protocolului WhatsApp
+            // Inițializez Noise handshake
+            this.noise = new NoiseHandshake(this.keyPair);
+            this.noise.init();
+            const handshakeMsg = this.noise.buildInitialMessage();
+            ws.send(handshakeMsg);
         });
         ws.on('message', (data) => {
-            // TODO: Procesează răspunsul de la server și finalizează pairing-ul
+            // Procesez răspunsul de la server cu Noise handshake
+            this.noise.processServerMessage(data);
         });
         ws.on('close', () => {
             console.log('WebSocket closed.');
